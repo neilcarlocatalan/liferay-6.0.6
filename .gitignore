@@ -1,8 +1,8 @@
 *~
 *.bak
 *.swp
-**/.classpath
-**/.project
+.classpath
+.project
 
 /*.iml
 /*.ipr
