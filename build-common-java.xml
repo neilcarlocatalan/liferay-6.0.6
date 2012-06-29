@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+
+<project name="build-common-java" xmlns:antelope="antlib:ise.antelope.tasks">
+	<import file="build-common.xml" />
+
+	<if>
+		<and>
+			<equals arg1="${app.server.type}" arg2="tomcat" />
+			<antelope:endswith string="${app.server.portal.dir}" with="/portal-web/docroot" />
+		</and>
+		<then>
+			<property name="portal-impl.classes.dir" value="${project.dir}/portal-web/docroot/WEB-INF/classes" />
+		</then>
+		<else>
+			<property name="portal-impl.classes.dir" value="${project.dir}/portal-impl/classes" />
+		</else>
+	</if>
+
+	<target name="clean">
+		<delete dir="classes" />
+		<delete dir="test-classes" />
+		<delete dir="test-results" />
+		<delete dir="${doc.dir}/${ant.project.name}/javadocs" />
+		<delete file="${jar.file}.jar" failonerror="false" />
+		<delete file="${jar.file}-javadoc.jar" failonerror="false" />
+		<delete file="${jar.file}-sources.jar" failonerror="false" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="classes" />
+
+		<echo message="call build-common-java compile target" />
+		
+		<copy todir="classes">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+		 
+		<if>
+			<equals arg1="${javac.compiler}" arg2="modern" />
+			<then>
+				<javac
+					classpathref="project.classpath"
+					compiler="${javac.compiler}"
+					debug="${javac.debug}"
+					deprecation="${javac.deprecation}"
+					destdir="classes"
+					fork="${javac.fork}"
+					includeAntRuntime="false"
+					memoryMaximumSize="${javac.memoryMaximumSize}"
+					nowarn="${javac.nowarn}"
+					srcdir="src"
+				/>
+			</then>
+			<else>
+				<javac
+					classpathref="project.classpath"
+					compiler="${javac.compiler}"
+					debug="${javac.debug}"
+					deprecation="${javac.deprecation}"
+					destdir="classes"
+					includeAntRuntime="false"
+					nowarn="${javac.nowarn}"
+					srcdir="src"
+				/>
+			</else>
+		</if>
+	</target>
+
+	<target name="deploy" depends="jar">
+		<copy file="${jar.file}.jar" todir="${deploy.dir}" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar
+			basedir="classes"
+			jarfile="${jar.file}.jar"
+		/>
+	</target>
+
+	<target name="jar-javadoc" depends="javadoc">
+		<jar
+			basedir="${doc.dir}/${ant.project.name}/javadocs"
+			jarfile="${jar.file}-javadoc.jar"
+		/>
+	</target>
+
+	<target name="jar-sources">
+		<jar
+			basedir="src"
+			jarfile="${jar.file}-sources.jar"
+		/>
+	</target>
+
+	<target name="javadoc">
+		<mkdir dir="${doc.dir}/${ant.project.name}/javadocs" />
+
+		<javadoc
+			breakiterator="yes"
+			classpathref="project.classpath"
+			destdir="${doc.dir}/${ant.project.name}/javadocs"
+			maxmemory="768m"
+			packagenames="*.*"
+			sourcepath="src"
+			stylesheetfile="${project.dir}/tools/javadoc.css"
+			useexternalfile="yes"
+		>
+			<arg line="-quiet -tag generated" />
+		</javadoc>
+	</target>
+</project>

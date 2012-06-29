@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<project name="classes" basedir="." default="compile">
+	<import file="../build-common.xml" />
+	
+	<property name="msg" value="hello" />
+	<property name="msg" value="fuxk" />
+	<echo message="${msg}" />
+	<property name="version" value="6.0" />
+	<propertycopy name="app.server.version" from="version" silent="true"/>
+	<echo message="${app.server.version}" />
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.class" />
+		</delete>
+	</target>
+
+	<target name="compile">
+		<javac
+			classpathref="project.classpath"
+			compiler="${javac.compiler}"
+			debug="${javac.debug}"
+			deprecation="${javac.deprecation}"
+			includeAntRuntime="false"
+			includes="*.java"
+			nowarn="${javac.nowarn}"
+			srcdir="."
+		/>
+	</target>
+
+	<target name="Test" depends="compile">
+		<java
+			classname="Test"
+			classpathref="project.classpath"
+			fork="true"
+		>
+			<jvmarg value="-Dexternal-properties=com/liferay/portal/tools/dependencies/portal-tools.properties" />
+			<!--
+			<jvmarg value="-Duser.language=pt" />
+			<jvmarg value="-Duser.country=BR" />
+			<jvmarg value="-Duser.timezone=GMT" />
+			-->
+		</java>
+	</target>
+</project>

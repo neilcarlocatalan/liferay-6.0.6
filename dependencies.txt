@@ -1,0 +1,3 @@
+util-taglib <- portal-impl
+portal-web <- portal-impl, portal-service, util-java, util-taglib
+sql <-- portal-impl

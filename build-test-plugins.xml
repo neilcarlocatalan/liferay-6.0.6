@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<project name="portal-test-plugins" basedir="." default="test" xmlns:antelope="antlib:ise.antelope.tasks">
+	<import file="build-test.xml" />
+
+	<target name="deploy-simple-server-plugins">
+		<delete dir="${liferay.home}/data" />
+		<delete dir="${liferay.home}/deploy" />
+
+		<exec dir="${lp.plugins.dir}" executable="cmd.exe">
+			<arg line="/c svn --username ${svn.username} --password ${svn.password} update" />
+		</exec>
+
+		<if>
+			<isset property="ee.deploy.dir" />
+			<then>
+				<echo file="${lp.plugins.dir}/build.${user.name}.properties">app.server.dir=${simple.server.dir}
+app.server.lib.global.dir=${simple.server.lib.global.dir}
+app.server.portal.dir=${simple.server.portal.dir}
+
+auto.deploy.dir=$${user.home}/liferay/deploy
+
+plugins.includes=${plugins.includes}</echo>
+			</then>
+			<else>
+				<echo file="${lp.plugins.dir}/build.${user.name}.properties">app.server.dir=${simple.server.dir}
+app.server.lib.global.dir=${simple.server.lib.global.dir}
+app.server.portal.dir=${simple.server.portal.dir}
+
+plugins.includes=${plugins.includes}</echo>
+			</else>
+		</if>
+
+		<ant dir="${lp.plugins.dir}/${plugin.types}" inheritAll="false">
+			<target name="clean" />
+			<target name="deploy" />
+		</ant>
+
+		<delete dir="${lp.plugins.dir}/dist" />
+		<mkdir dir="${lp.plugins.dir}/dist" />
+	</target>
+
+	<target name="deploy-versioned-simple-server-plugins">
+		<delete dir="${ee.deploy.dir}" />
+
+		<copy todir="${ee.deploy.dir}">
+			<fileset
+				dir="${hudson.plugin.dependencies.dir}/${lp.version}"
+				includes="web-form**.war"
+			/>
+		</copy>
+	</target>
+</project>
