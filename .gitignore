@@ -4,6 +4,9 @@
 .classpath
 .project
 
+/sql/sql.*.properties
+/sql/log
+
 /*.iml
 /*.ipr
 /*.iws
