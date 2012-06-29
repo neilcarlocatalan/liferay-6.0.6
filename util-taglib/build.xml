@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<project name="util-taglib" basedir="." default="compile">
+	<import file="../build-common-java.xml" />
+
+	<property name="jar.file" value="${ant.project.name}" />
+
+	<target name="deploy" depends="jar">
+		<echo message="call util-taglib deploy" />
+		<if>
+			<equals arg1="${app.server.type}" arg2="tomcat" />
+			<then>
+				<copy file="${jar.file}.jar" todir="${app.server.portal.dir}/WEB-INF/lib" />
+
+				<copy todir="${app.server.portal.dir}/WEB-INF/tld">
+					<fileset dir="classes/META-INF" includes="*.tld" />
+				</copy>
+			</then>
+		</if>
+	</target>
+
+	<target name="jar">
+		<echo message="call util-taglib jar target" />
+		<antcall target="build-common-java.jar" />
+
+		<copy file="${jar.file}.jar" todir="${portal-impl.classes.dir}/com/liferay/portal/deploy/dependencies" />
+
+		<copy todir="${portal-impl.classes.dir}/com/liferay/portal/deploy/dependencies">
+			<fileset dir="classes/META-INF" />
+		</copy>
+
+		<copy file="${jar.file}.jar" todir="${project.dir}/portal-web/docroot/WEB-INF/lib" />
+
+		<copy todir="${project.dir}/portal-web/docroot/WEB-INF/tld">
+			<fileset dir="classes/META-INF" includes="*.tld" />
+		</copy>
+	</target>
+
+	<target name="taglibdoc">
+		<property name="doc.taglibs.dir" value="${doc.dir}/taglibs" />
+
+		<mkdir dir="${doc.taglibs.dir}" />
+
+		<java
+			classname="com.sun.tlddoc.TLDDoc"
+			classpathref="project.classpath"
+			failonerror="true"
+			fork="true"
+			maxmemory="256m"
+		>
+			<arg line="-d ${doc.taglibs.dir}" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-aui.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-faces.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-portlet-ext.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-portlet.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-security.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-theme.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-ui.tld" />
+			<arg value="${project.dir}/util-taglib/src/META-INF/liferay-util.tld" />
+		</java>
+	</target>
+</project>
