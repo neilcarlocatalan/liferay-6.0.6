@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Member_AssertAddCommentNotOwnerTest</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Member_AssertAddCommentNotOwnerTest</td></tr>
+</thead><tbody>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Document Library Permissions Test Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAtAndWait</td>
+	<td>link=Document Library Permissions Test Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAtAndWait</td>
+	<td>link=Permissions Test Subfolder</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//li[5]/span/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAtAndWait</td>
+	<td>link=View</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAtAndWait</td>
+	<td>link=Comments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Post Reply</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>_20_postReplyBody1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>typeKeys</td>
+	<td>_20_postReplyBody1</td>
+	<td>I am a Member and I can write a comment on a different user's uploaded document</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>_20_postReplyBody1</td>
+	<td>I am a Member and I can write a comment on a different user's uploaded document!</td>
+</tr>
+<tr>
+	<td>clickAtAndWait</td>
+	<td>_20_postReplyButton1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Your request processed successfully.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>I am a Member and I can write a comment on a different user's uploaded document!</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
