@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<project name="portal-client" basedir="." default="compile">
+	<import file="../build-common-java.xml" />
+
+    <property name="deploy.dir" value="${app.server.lib.portal.dir}" />
+	<property name="jar.file" value="${ant.project.name}" />
+	<property name="client.url" value="http://localhost:8080/tunnel-web/axis" /> 
+	<!-- <property name="client.url" value="file:///E:/java/liferay-portal-src-6.0.6/portal-client" /> --> 
+
+	<target name="build-client" depends="clean">
+		<echo message="Make sure the server is listening on ${client.url}." />
+		<echo message="" />
+
+		<delete dir="src" />
+		<mkdir dir="src" />
+	
+		<axis-wsdl2java
+			output="src"
+			url="${client.url}/Portal_LayoutService?wsdl"
+		/>
+
+		<java
+			classname="com.liferay.portal.tools.PortalClientBuilder"
+			classpathref="project.classpath"
+			failonerror="true"
+			fork="true"
+			newenvironment="true"
+		>
+			<jvmarg value="-Dexternal-properties=com/liferay/portal/tools/dependencies/portal-tools.properties" />
+			<arg value="${project.dir}/tunnel-web/docroot/WEB-INF/server-config.wsdd" />
+			<arg value="src" />
+			<arg value="namespace-mapping.properties" />
+			<arg value="${client.url}" />
+		</java>
+
+		<!-- <antcall target="jar" /> -->
+	</target>
+
+	<target name="clean">
+		<delete dir="classes"/>
+		<delete file="${jar.file}.jar" failonerror="false" />
+		<delete file="${jar.file}-javadoc.jar" failonerror="false" />
+		<delete file="${jar.file}-sources.jar" failonerror="false" />
+		<delete dir="${javadoc.dir}" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar
+			jarfile="${jar.file}.jar"
+		>
+			<fileset dir="classes" />
+			<!-- <fileset dir="src" /> --> 
+		</jar>
+
+		<copy file="portal-client.jar" todir="${project.dir}/lib/portal" />
+	</target>
+
+	<target name="jar-sources">
+		<tstamp>
+			<format property="tstamp.value" pattern="yyyyMMddkkmmssSSS" />
+		</tstamp>
+
+		<unzip
+			dest="${tstamp.value}"
+			src="${jar.file}.jar"
+		/>
+
+		<jar
+			basedir="${tstamp.value}"
+			excludes="**/*.class"
+			jarfile="${jar.file}-sources.jar"
+		/>
+
+		<delete dir="${tstamp.value}" />
+	</target>
+
+	<target name="java2html">
+		<delete dir="src" />
+		<mkdir dir="src" />
+
+		<unjar src="${jar.file}.jar" dest="src" />
+
+		<antcall target="build-common-java.java2html" />
+	</target>
+
+	<target name="javadoc" >
+		 
+		<mkdir dir="src" />
+
+		<unjar src="${jar.file}.jar" dest="src" />
+
+		<antcall target="build-common-java.javadoc" />
+	</target>
+</project>
