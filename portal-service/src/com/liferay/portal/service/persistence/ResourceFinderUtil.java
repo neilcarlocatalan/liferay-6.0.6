@@ -1,0 +1,48 @@
+/**
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.service.persistence;
+
+import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
+
+/**
+ * @author Brian Wing Shun Chan
+ */
+public class ResourceFinderUtil {
+	public static java.util.List<com.liferay.portal.model.Resource> findByName(
+		java.lang.String name)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getFinder().findByName(name);
+	}
+
+	public static java.util.List<com.liferay.portal.model.Resource> findByC_P(
+		long companyId, java.lang.String primKey)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getFinder().findByC_P(companyId, primKey);
+	}
+
+	public static ResourceFinder getFinder() {
+		if (_finder == null) {
+			_finder = (ResourceFinder)PortalBeanLocatorUtil.locate(ResourceFinder.class.getName());
+		}
+
+		return _finder;
+	}
+
+	public void setFinder(ResourceFinder finder) {
+		_finder = finder;
+	}
+
+	private static ResourceFinder _finder;
+}

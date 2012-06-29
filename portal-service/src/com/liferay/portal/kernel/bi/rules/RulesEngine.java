@@ -1,0 +1,74 @@
+/**
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.kernel.bi.rules;
+
+import com.liferay.portal.kernel.messaging.proxy.ExecutingClassLoaders;
+import com.liferay.portal.kernel.messaging.proxy.MessagingProxy;
+import com.liferay.portal.kernel.messaging.proxy.ProxyMode;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author Michael C. Han
+ * @author Vihang Pathak
+ */
+public interface RulesEngine {
+
+	@MessagingProxy(mode = ProxyMode.SYNC)
+	public void add(
+			String domainName, RulesResourceRetriever RulesResourceRetriever,
+			@ExecutingClassLoaders ClassLoader... clientClassLoaders)
+		throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.SYNC)
+	public boolean containsRuleDomain(String domainName)
+		throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.ASYNC)
+	public void execute(
+			RulesResourceRetriever RulesResourceRetriever, List<Fact<?>> facts,
+			@ExecutingClassLoaders ClassLoader... clientClassLoaders)
+		throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.SYNC)
+	public Map<String, ?> execute(
+			RulesResourceRetriever RulesResourceRetriever, List<Fact<?>> facts,
+			Query query,
+			@ExecutingClassLoaders ClassLoader... clientClassLoaders)
+		throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.ASYNC)
+	public void execute(
+			String domainName, List<Fact<?>> facts,
+			@ExecutingClassLoaders ClassLoader... clientClassLoaders)
+		throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.SYNC)
+	public Map<String, ?> execute(
+			String domainName, List<Fact<?>> facts, Query query,
+			@ExecutingClassLoaders ClassLoader... clientClassLoaders)
+		throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.SYNC)
+	public void remove(String domainName) throws RulesEngineException;
+
+	@MessagingProxy(mode = ProxyMode.SYNC)
+	public void update(
+			String domainName, RulesResourceRetriever RulesResourceRetriever,
+			@ExecutingClassLoaders ClassLoader... clientClassLoaders)
+		throws RulesEngineException;
+
+}
